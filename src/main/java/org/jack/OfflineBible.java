@@ -18,11 +18,6 @@ public class OfflineBible
         List<String[]> records = reader.readAll();
         for (String[] record : records) {
             bible.put(record[0], new String[]{record[1], record[2], record[3], record[4]});
-
-//            humanChapter = record[1];
-//            nextChapter = record[2];
-//            finalVerse = Integer.parseInt(record[3]);
-//            rawText = record[4];
         }
         reader.close();
     }

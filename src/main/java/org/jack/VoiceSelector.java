@@ -48,15 +48,12 @@ public class VoiceSelector extends JFrame {
                     break;
                 }
             }
-
-            //Main.setVoice(Integer.parseInt(c.getText().substring(6, 7)));
         }
     }
 
     public void createWindow() {
         setContentPane(voiceSelectorPanel);
         setTitle("BibleTTS");
-        //setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(400, 225);
         setLocationRelativeTo(null);
         setLocationByPlatform(true);

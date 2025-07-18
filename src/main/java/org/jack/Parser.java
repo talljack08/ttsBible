@@ -1,6 +1,5 @@
 package org.jack;
 
-import com.opencsv.exceptions.CsvException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -107,30 +106,11 @@ public class Parser
         }
         else
         {
-//            CSVReader reader = new CSVReader(new FileReader("bible-tts/" + translation.toLowerCase() + ".csv"));
-//            List<String[]> records = reader.readAll();
-//            for (String[] record : records) {
-//                if(record[0].equalsIgnoreCase(chapter))
-//                {
-//                    humanChapter = record[1];
-//                    nextChapter = record[2];
-//                    finalVerse = Integer.parseInt(record[3]);
-//                    rawText = record[4];
-//
-//                    break;
-//                }
-//            }
-//            reader.close();
-
             String[] info = OfflineBible.getChapterInfo(chapter.toUpperCase());
             humanChapter = info[0];
             nextChapter = info[1];
             finalVerse = Integer.parseInt(info[2]);
             rawText = info[3];
-
-
-            //String s = "{\"pageProps\":{\"chapterText\": \"" + rawText + "\", \"chapterInfo\":{\"content\": \"" + finalVerse + "\", \"next\": {\"usfm\": [\"" + nextChapter + "\"]}, \"reference\":{\"human\":\"" + humanChapter + "\"}}}}";
-            //chapterJSON = new JSONObject(s);
         }
 
 
@@ -248,9 +228,7 @@ public class Parser
             } else {
                 System.out.println("Request failed: " + response.code());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException ignored) {}
 
         return new JSONObject(responseString);
     }

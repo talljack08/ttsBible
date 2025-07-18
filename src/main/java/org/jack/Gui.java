@@ -12,8 +12,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -27,7 +25,7 @@ public class Gui extends JFrame {
     private JPanel Right;
     private HintTextField psalmsVerses;
     private HintTextField psalmsChapter;
-    private JComboBox comboBox1;
+    private JComboBox<String> comboBox1;
     private HintTextField oldTestamentVerses;
     private HintTextField newTestamentVerses;
     private HintTextField oldTestamentChapter;
@@ -69,10 +67,11 @@ public class Gui extends JFrame {
             String ot_chapter = oldTestamentChapter.betterGetText();
             String nt_chapter = newTestamentChapter.betterGetText();
             String ps_chapter = psalmsChapter.betterGetText();
-            String translation = (String) comboBox1.getItemAt(comboBox1.getSelectedIndex());
+            String translation = comboBox1.getItemAt(comboBox1.getSelectedIndex());
 
             // step 1 psalm 119 detection
-            if (ps_chapter.equalsIgnoreCase("psa.119")) {
+            if (ps_chapter.equalsIgnoreCase("psa.119"))
+            {
                 ot_goal = -99999;
                 nt_goal = -99999;
                 ps_goal = -99999;
@@ -84,10 +83,12 @@ public class Gui extends JFrame {
             Reader ntReader;
             Reader psReader;
 
-            if (!offlineBible.exists()) {
+            if (!offlineBible.exists())
+            {
                 // online parsing
                 String changingBit = Main.getChangingBit();
-                try {
+                try
+                {
                     otReader = new Reader("online", changingBit, ot_chapter, translation, ot_goal);
                     ntReader = new Reader("online", changingBit, nt_chapter, translation, nt_goal);
                     psReader = new Reader("online", changingBit, ps_chapter, translation, ps_goal);
@@ -96,7 +97,8 @@ public class Gui extends JFrame {
                 }
             } else {
                 // offline parsing
-                try {
+                try
+                {
                     OfflineBible.importBible(translation.toLowerCase());
                     otReader = new Reader("offline", "", ot_chapter, translation, ot_goal);
                     ntReader = new Reader("offline", "", nt_chapter, translation, nt_goal);
@@ -108,7 +110,8 @@ public class Gui extends JFrame {
 
 
             // step 2 psalm 119 offset correction
-            if (ps_chapter.equalsIgnoreCase("psa.119")) {
+            if (ps_chapter.equalsIgnoreCase("psa.119"))
+            {
                 otReader.setOffset(Double.parseDouble(oldTestamentVerses.getText()));
                 ntReader.setOffset(Double.parseDouble(newTestamentVerses.getText()));
                 psReader.setOffset(Double.parseDouble(psalmsVerses.getText()));
@@ -118,7 +121,8 @@ public class Gui extends JFrame {
 
             String json = "";
 
-            if (doJSON) {
+            if(doJSON)
+            {
                 json = "{\"goals\": [" + otReader.getReadingOffset() + ", " + ntReader.getReadingOffset() + ", " + psReader.getReadingOffset() + "], \"chapters\": [" + otReader.getNextChapter() + ", " + ntReader.getNextChapter() + ", " + psReader.getNextChapter() + "]}";
 
                 // for clipboard

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="org.jack.Gui">
+  <grid id="27dc6" binding="GuiPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="20" y="20" width="505" height="403"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="8d463" binding="Header" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+        <constraints border-constraint="North"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="29f6a" class="javax.swing.JLabel">
+            <constraints/>
+            <properties>
+              <text value="Bible TTS"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="32b72" binding="Footer" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+        <constraints border-constraint="South"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="c82f0" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+            <constraints/>
+            <properties/>
+            <clientProperties>
+              <html.disable class="java.lang.Boolean" value="false"/>
+            </clientProperties>
+          </component>
+          <component id="52ea7" class="javax.swing.JButton" binding="voiceButton">
+            <constraints/>
+            <properties>
+              <text value="Voices"/>
+            </properties>
+          </component>
+          <component id="937ab" class="javax.swing.JButton" binding="importButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="Options"/>
+            </properties>
+          </component>
+          <component id="992c4" class="javax.swing.JButton" binding="generateButton">
+            <constraints/>
+            <properties>
+              <text value="Generate"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="a5311" binding="MainP" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints border-constraint="Center"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="10b6" binding="Left" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <grid id="fd601" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="5176f" class="javax.swing.JLabel">
+                    <constraints border-constraint="North"/>
+                    <properties>
+                      <text value="Psalms Offsets"/>
+                    </properties>
+                  </component>
+                  <component id="6b5c3" class="org.jack.HintTextField" binding="psalmsVerses" custom-create="true">
+                    <constraints border-constraint="Center"/>
+                  </component>
+                </children>
+              </grid>
+              <grid id="205fc" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="3c514" class="javax.swing.JLabel">
+                    <constraints border-constraint="North"/>
+                    <properties>
+                      <text value="New Testament Offsets"/>
+                    </properties>
+                  </component>
+                  <component id="847d3" class="org.jack.HintTextField" binding="newTestamentVerses" custom-create="true">
+                    <constraints border-constraint="Center"/>
+                  </component>
+                </children>
+              </grid>
+              <grid id="8dff9" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="4b7d8" class="javax.swing.JLabel">
+                    <constraints border-constraint="North"/>
+                    <properties>
+                      <text value="Old Testament Offsets"/>
+                    </properties>
+                  </component>
+                  <component id="81e3e" class="org.jack.HintTextField" binding="oldTestamentVerses" custom-create="true">
+                    <constraints border-constraint="Center"/>
+                    <properties/>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
+          <grid id="60cb9" binding="Right" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <grid id="e3f8c" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="370be" class="javax.swing.JLabel">
+                    <constraints border-constraint="North"/>
+                    <properties>
+                      <text value="PS Chapter"/>
+                    </properties>
+                  </component>
+                  <component id="27fde" class="org.jack.HintTextField" binding="psalmsChapter" custom-create="true">
+                    <constraints border-constraint="Center"/>
+                  </component>
+                </children>
+              </grid>
+              <grid id="11e5a" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="61e59" class="javax.swing.JLabel">
+                    <constraints border-constraint="North"/>
+                    <properties>
+                      <text value="NT Chapter"/>
+                    </properties>
+                  </component>
+                  <component id="3a069" class="org.jack.HintTextField" binding="newTestamentChapter" custom-create="true">
+                    <constraints border-constraint="Center"/>
+                  </component>
+                </children>
+              </grid>
+              <grid id="7b819" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="29f6" class="javax.swing.JLabel">
+                    <constraints border-constraint="North"/>
+                    <properties>
+                      <text value="OT Chapter"/>
+                    </properties>
+                  </component>
+                  <component id="dd453" class="org.jack.HintTextField" binding="oldTestamentChapter" custom-create="true">
+                    <constraints border-constraint="Center"/>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>

@@ -15,7 +15,7 @@
           <component id="29f6a" class="javax.swing.JLabel">
             <constraints/>
             <properties>
-              <text value="Bible TTS"/>
+              <text value="BibleTTS"/>
             </properties>
           </component>
         </children>
@@ -81,6 +81,7 @@
                   </component>
                   <component id="6b5c3" class="org.jack.HintTextField" binding="psalmsVerses" custom-create="true">
                     <constraints border-constraint="Center"/>
+                    <properties/>
                   </component>
                 </children>
               </grid>
@@ -99,6 +100,7 @@
                   </component>
                   <component id="847d3" class="org.jack.HintTextField" binding="newTestamentVerses" custom-create="true">
                     <constraints border-constraint="Center"/>
+                    <properties/>
                   </component>
                 </children>
               </grid>
@@ -146,6 +148,7 @@
                   </component>
                   <component id="27fde" class="org.jack.HintTextField" binding="psalmsChapter" custom-create="true">
                     <constraints border-constraint="Center"/>
+                    <properties/>
                   </component>
                 </children>
               </grid>
@@ -164,6 +167,7 @@
                   </component>
                   <component id="3a069" class="org.jack.HintTextField" binding="newTestamentChapter" custom-create="true">
                     <constraints border-constraint="Center"/>
+                    <properties/>
                   </component>
                 </children>
               </grid>
@@ -182,6 +186,7 @@
                   </component>
                   <component id="dd453" class="org.jack.HintTextField" binding="oldTestamentChapter" custom-create="true">
                     <constraints border-constraint="Center"/>
+                    <properties/>
                   </component>
                 </children>
               </grid>

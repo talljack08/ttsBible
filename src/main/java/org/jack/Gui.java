@@ -36,6 +36,10 @@ public class Gui extends JFrame {
     private boolean doJSON = false;
 
     public Gui() {
+        // checks for updates
+        UpdateChecker checker = new UpdateChecker(this);
+        checker.start();
+
         $$$setupUI$$$();
         setContentPane(GuiPanel);
         setTitle("BibleTTS");
@@ -70,7 +74,7 @@ public class Gui extends JFrame {
             String translation = comboBox1.getItemAt(comboBox1.getSelectedIndex());
 
             // step 1 psalm 119 detection
-            if (ps_chapter.equalsIgnoreCase("psa.119"))
+            if(ps_chapter.equalsIgnoreCase("psa.119"))
             {
                 ot_goal = -99999;
                 nt_goal = -99999;
@@ -83,7 +87,7 @@ public class Gui extends JFrame {
             Reader ntReader;
             Reader psReader;
 
-            if (!offlineBible.exists())
+            if(!offlineBible.exists())
             {
                 // online parsing
                 String changingBit = Main.getChangingBit();
@@ -110,7 +114,7 @@ public class Gui extends JFrame {
 
 
             // step 2 psalm 119 offset correction
-            if (ps_chapter.equalsIgnoreCase("psa.119"))
+            if(ps_chapter.equalsIgnoreCase("psa.119"))
             {
                 otReader.setOffset(Double.parseDouble(oldTestamentVerses.getText()));
                 ntReader.setOffset(Double.parseDouble(newTestamentVerses.getText()));
@@ -151,7 +155,8 @@ public class Gui extends JFrame {
         voiceButton.addActionListener(e -> v.createWindow());
     }
 
-    public void _import(String j) {
+    public void _import(String j)
+    {
         JSONObject json = new JSONObject(j);
 
         JSONArray goals = json.getJSONArray("goals");
@@ -166,7 +171,8 @@ public class Gui extends JFrame {
 
     }
 
-    public void setDoJSON(boolean b) {
+    public void setDoJSON(boolean b)
+    {
         doJSON = b;
     }
 
@@ -185,7 +191,7 @@ public class Gui extends JFrame {
         Header.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         GuiPanel.add(Header, BorderLayout.NORTH);
         final JLabel label1 = new JLabel();
-        label1.setText("Bible TTS");
+        label1.setText("BibleTTS");
         Header.add(label1);
         Footer = new JPanel();
         Footer.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));

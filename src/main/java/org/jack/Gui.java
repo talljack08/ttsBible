@@ -33,16 +33,20 @@ public class Gui extends JFrame {
     private JButton importButton;
     private JButton voiceButton;
 
+    private static final VoiceSelector v = new VoiceSelector();
+
     private boolean doJSON = false;
 
     public Gui() {
+        // Makes sure title is set before possibly being overwritten with "offline mode"
+        setTitle("BibleTTS");
+
         // checks for updates
         UpdateChecker checker = new UpdateChecker(this);
         checker.start();
 
         $$$setupUI$$$();
         setContentPane(GuiPanel);
-        setTitle("BibleTTS");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(400, 225);
         setLocationRelativeTo(null);
@@ -55,7 +59,6 @@ public class Gui extends JFrame {
         setVisible(true);
 
         Options i = new Options(this);
-        VoiceSelector v = new VoiceSelector();
 
         generateButton.addActionListener(e -> {
             int multiplier = 1;
@@ -153,6 +156,12 @@ public class Gui extends JFrame {
         importButton.addActionListener(e -> i.createWindow());
 
         voiceButton.addActionListener(e -> v.createWindow());
+    }
+
+    public void setOfflineMode()
+    {
+        v.setOfflineMode();
+        setTitle("BibleTTS (offline)");
     }
 
     public void _import(String j)

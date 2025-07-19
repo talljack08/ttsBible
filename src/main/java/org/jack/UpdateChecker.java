@@ -46,7 +46,7 @@ public class UpdateChecker extends Thread
 
                         if(currentVersion.compareTo(latestVersion) < 0)
                         {
-                            gui.setTitle("ttsBible (version " + version.toString() + " available)");
+                            gui.setTitle("ttsBible (version " + version + " available)");
                         }
 
                         break;
@@ -57,6 +57,8 @@ public class UpdateChecker extends Thread
             }
         } catch (IOException ignored) {
             System.out.println("Failed to fetch latest version (are you offline?)");
+
+            gui.setOfflineMode();
         }
     }
 }

@@ -33,12 +33,10 @@ public class VoiceSelector extends JFrame {
         voice4CheckBox.addActionListener(e -> allBut(voice4CheckBox, boxes));
     }
 
-    public void setOfflineMode()
-    {
+    public void setOfflineMode() {
         offlineMode = true;
 
-        for (JCheckBox box : new JCheckBox[]{voice1CheckBox, voice2CheckBox, voice3CheckBox, voice4CheckBox})
-        {
+        for (JCheckBox box : new JCheckBox[]{voice1CheckBox, voice2CheckBox, voice3CheckBox, voice4CheckBox}) {
             box.setSelected(false);
             box.setEnabled(false);
         }
@@ -68,8 +66,7 @@ public class VoiceSelector extends JFrame {
 
     public void createWindow() {
         setContentPane(voiceSelectorPanel);
-        if(!offlineMode)
-        {
+        if (!offlineMode) {
             setTitle("BibleTTS");
         }
         setSize(400, 225);
@@ -78,10 +75,8 @@ public class VoiceSelector extends JFrame {
         setVisible(true);
     }
 
-    public void setVoice(int i)
-    {
-        switch(i)
-        {
+    public void setVoice(int i) {
+        switch (i) {
             case 1 -> Main.voice = "en-CA-LiamNeural";
             case 2 -> Main.voice = "en-US-ChristopherNeural";
             case 3 -> Main.voice = "fr-FR-RemyMultilingualNeural";

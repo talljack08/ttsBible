@@ -51,11 +51,11 @@ public class Gui extends JFrame {
         setSize(400, 225);
         setLocationRelativeTo(null);
         setLocationByPlatform(true);
-        comboBox1.addItem("NABRE");
-        comboBox1.addItem("ESV");
-        comboBox1.addItem("KJV");
-        comboBox1.addItem("NIV");
-        comboBox1.addItem("CEV");
+//        comboBox1.addItem("NABRE");
+//        comboBox1.addItem("ESV");
+//        comboBox1.addItem("KJV");
+//        comboBox1.addItem("NIV");
+//        comboBox1.addItem("CEV");
         setVisible(true);
 
         Options i = new Options(this);
@@ -77,8 +77,7 @@ public class Gui extends JFrame {
             String translation = comboBox1.getItemAt(comboBox1.getSelectedIndex());
 
             // step 1 psalm 119 detection
-            if(ps_chapter.equalsIgnoreCase("psa.119"))
-            {
+            if (ps_chapter.equalsIgnoreCase("psa.119")) {
                 ot_goal = -99999;
                 nt_goal = -99999;
                 ps_goal = -99999;
@@ -90,12 +89,10 @@ public class Gui extends JFrame {
             Reader ntReader;
             Reader psReader;
 
-            if(!offlineBible.exists())
-            {
+            if (!offlineBible.exists()) {
                 // online parsing
                 String changingBit = Main.getChangingBit();
-                try
-                {
+                try {
                     otReader = new Reader("online", changingBit, ot_chapter, translation, ot_goal);
                     ntReader = new Reader("online", changingBit, nt_chapter, translation, nt_goal);
                     psReader = new Reader("online", changingBit, ps_chapter, translation, ps_goal);
@@ -104,8 +101,7 @@ public class Gui extends JFrame {
                 }
             } else {
                 // offline parsing
-                try
-                {
+                try {
                     OfflineBible.importBible(translation.toLowerCase());
                     otReader = new Reader("offline", "", ot_chapter, translation, ot_goal);
                     ntReader = new Reader("offline", "", nt_chapter, translation, nt_goal);
@@ -117,8 +113,7 @@ public class Gui extends JFrame {
 
 
             // step 2 psalm 119 offset correction
-            if(ps_chapter.equalsIgnoreCase("psa.119"))
-            {
+            if (ps_chapter.equalsIgnoreCase("psa.119")) {
                 otReader.setOffset(Double.parseDouble(oldTestamentVerses.getText()));
                 ntReader.setOffset(Double.parseDouble(newTestamentVerses.getText()));
                 psReader.setOffset(Double.parseDouble(psalmsVerses.getText()));
@@ -128,8 +123,7 @@ public class Gui extends JFrame {
 
             String json = "";
 
-            if(doJSON)
-            {
+            if (doJSON) {
                 json = "{\"goals\": [" + otReader.getReadingOffset() + ", " + ntReader.getReadingOffset() + ", " + psReader.getReadingOffset() + "], \"chapters\": [" + otReader.getNextChapter() + ", " + ntReader.getNextChapter() + ", " + psReader.getNextChapter() + "]}";
 
                 // for clipboard
@@ -147,8 +141,7 @@ public class Gui extends JFrame {
             String confirmation = "Done!";
             try {
                 String error = file.createFiles();
-                if(!error.isEmpty())
-                {
+                if (!error.isEmpty()) {
                     confirmation = error;
                 }
             } catch (InvalidDataException | UnsupportedTagException | IOException | InterruptedException ex) {
@@ -163,30 +156,25 @@ public class Gui extends JFrame {
         voiceButton.addActionListener(e -> v.createWindow());
     }
 
-    public void setOfflineMode()
-    {
+    public void setOfflineMode() {
         v.setOfflineMode();
         setTitle("BibleTTS (offline)");
 
-        for(int i = comboBox1.getItemCount()-1; i >= 0 ; i--)
-        {
+        for (int i = comboBox1.getItemCount() - 1; i >= 0; i--) {
             File f = new File("bible-tts/offline/" + comboBox1.getItemAt(i).toLowerCase() + ".csv");
-            if(!f.exists())
-            {
+            if (!f.exists()) {
                 comboBox1.removeItemAt(i);
             }
         }
 
-        if(comboBox1.getItemCount() == 0)
-        {
-            comboBox1.addItem("None found");
+        if (comboBox1.getItemCount() == 0) {
+            comboBox1.addItem("None");
             comboBox1.setEnabled(false);
             generateButton.setEnabled(false);
         }
     }
 
-    public void _import(String j)
-    {
+    public void _import(String j) {
         JSONObject json = new JSONObject(j);
 
         JSONArray goals = json.getJSONArray("goals");
@@ -201,8 +189,7 @@ public class Gui extends JFrame {
 
     }
 
-    public void setDoJSON(boolean b)
-    {
+    public void setDoJSON(boolean b) {
         doJSON = b;
     }
 
@@ -227,6 +214,13 @@ public class Gui extends JFrame {
         Footer.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         GuiPanel.add(Footer, BorderLayout.SOUTH);
         comboBox1 = new JComboBox();
+        final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
+        defaultComboBoxModel1.addElement("NABRE");
+        defaultComboBoxModel1.addElement("ESV");
+        defaultComboBoxModel1.addElement("KVJ");
+        defaultComboBoxModel1.addElement("NIV");
+        defaultComboBoxModel1.addElement("CEV");
+        comboBox1.setModel(defaultComboBoxModel1);
         comboBox1.putClientProperty("html.disable", Boolean.FALSE);
         Footer.add(comboBox1);
         voiceButton = new JButton();
@@ -298,13 +292,13 @@ public class Gui extends JFrame {
         return GuiPanel;
     }
 
-    private void createUIComponents()
-    {
+    private void createUIComponents() {
         oldTestamentVerses = new HintTextField("0");
         oldTestamentChapter = new HintTextField("Gen.1");
         newTestamentVerses = new HintTextField("0");
         newTestamentChapter = new HintTextField("Mat.1");
         psalmsVerses = new HintTextField("0");
         psalmsChapter = new HintTextField("Psa.1");
+
     }
 }

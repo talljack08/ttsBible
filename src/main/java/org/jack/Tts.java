@@ -8,6 +8,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -159,22 +160,23 @@ public class Tts {
             command.remove(command.size()-1);
             command.add("python3 -m pip install lameenc --break-system-packages");
             processBuilder = new ProcessBuilder(command);
-            Files.createDirectories(Paths.get("bible-tts/offline"));
-            processBuilder.directory(new File(System.getProperty("user.dir") + "/bible-tts/offline"));
+            Path offlineFolder = Paths.get(System.getProperty("user.dir"), "bible-tts", "offline");
+            Files.createDirectories(offlineFolder);
+            processBuilder.directory(offlineFolder.toFile());
             process = processBuilder.start();
             process.waitFor();
 
             System.out.println("Done.");
             System.out.print("Downloading TTS model... ");
 
-            File model = new File("bible-tts/offline/en_US-lessac-medium.onnx");
+            File model = Paths.get(System.getProperty("user.dir"), "bible-tts", "offline", "en_US-lessac-medium.onnx").toFile();
             if(!model.exists())
             {
                 command.remove(command.size()-1);
                 command.add("python3 -m piper.download_voices en_US-lessac-medium");
                 processBuilder = new ProcessBuilder(command);
-                Files.createDirectories(Paths.get("bible-tts/offline/"));
-                processBuilder.directory(new File("bible-tts/offline/"));
+                Files.createDirectories(offlineFolder);
+                processBuilder.directory(Paths.get(System.getProperty("user.dir"), "bible-tts", "offline").toFile());
                 process = processBuilder.start();
                 process.waitFor();
 
@@ -194,8 +196,8 @@ public class Tts {
 
     public String createFiles() throws InvalidDataException, UnsupportedTagException, IOException, InterruptedException {
         // creates paths
-        Files.createDirectories(Paths.get("bible-tts")); // if it doesn't exist already
-        Files.createDirectories(Paths.get("bible-tts/chunks"));
+        Files.createDirectories(Paths.get(System.getProperty("user.dir"), "bible-tts")); // if it doesn't exist already
+        Files.createDirectories(Paths.get(System.getProperty("user.dir"), "bible-tts", "chunks"));
 
         // makes sure piper is installed for offline usage
         String error = "";
@@ -230,7 +232,7 @@ public class Tts {
         System.out.print("Stitching... ");
         Mp3Stitcher.stitchMp3Files(chunkNum, fileName);
         System.out.println("Done");
-        FileUtils.deleteDirectory(new File("bible-tts/chunks"));
+        FileUtils.deleteDirectory(Paths.get(System.getProperty("user.dir"), "bible-tts", "chunks").toFile());
 
         return "";
     }

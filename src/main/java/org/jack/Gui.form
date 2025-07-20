@@ -27,7 +27,15 @@
         <children>
           <component id="c82f0" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
             <constraints/>
-            <properties/>
+            <properties>
+              <model>
+                <item value="NABRE"/>
+                <item value="ESV"/>
+                <item value="KVJ"/>
+                <item value="NIV"/>
+                <item value="CEV"/>
+              </model>
+            </properties>
             <clientProperties>
               <html.disable class="java.lang.Boolean" value="false"/>
             </clientProperties>

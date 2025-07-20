@@ -64,7 +64,7 @@ public class Tts {
             command.add("-c");
         }
 
-        command.add("python3 -m piper -h");
+        command.add(formatCommand("python3 -m piper -h"));
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         processBuilder.directory(new File("."));
         Process process = processBuilder.start();
@@ -82,7 +82,7 @@ public class Tts {
             if(reader.readLine() != null)
             {
                 command.remove(command.size()-1);
-                command.add("python3 -m lameenc");
+                command.add(formatCommand("python3 -m lameenc"));
                 processBuilder = new ProcessBuilder(command);
                 processBuilder.directory(new File("."));
                 process = processBuilder.start();
@@ -149,7 +149,7 @@ public class Tts {
             System.out.print("Downloading piper-tts... ");
 
             command.remove(command.size()-1); // removes previous command
-            command.add("python3 -m pip install piper-tts --break-system-packages");
+            command.add(formatCommand("python3 -m pip install piper-tts --break-system-packages"));
             ProcessBuilder processBuilder = new ProcessBuilder(command);
             Process process = processBuilder.start();
             process.waitFor();
@@ -158,7 +158,7 @@ public class Tts {
             System.out.print("Downloading lameenc... ");
 
             command.remove(command.size()-1);
-            command.add("python3 -m pip install lameenc --break-system-packages");
+            command.add(formatCommand("python3 -m pip install lameenc --break-system-packages"));
             processBuilder = new ProcessBuilder(command);
             Path offlineFolder = Paths.get(System.getProperty("user.dir"), "bible-tts", "offline");
             Files.createDirectories(offlineFolder);
@@ -173,7 +173,7 @@ public class Tts {
             if(!model.exists())
             {
                 command.remove(command.size()-1);
-                command.add("python3 -m piper.download_voices en_US-lessac-medium");
+                command.add(formatCommand("python3 -m piper.download_voices en_US-lessac-medium"));
                 processBuilder = new ProcessBuilder(command);
                 Files.createDirectories(offlineFolder);
                 processBuilder.directory(Paths.get(System.getProperty("user.dir"), "bible-tts", "offline").toFile());
@@ -192,6 +192,16 @@ public class Tts {
         }
 
         return "";
+    }
+
+    private String formatCommand(String text)
+    {
+        if(System.getProperty("os.name").toLowerCase().startsWith("windows"))
+        {
+            text = text.replace("python3", "py");
+        }
+
+        return text;
     }
 
     public String createFiles() throws InvalidDataException, UnsupportedTagException, IOException, InterruptedException {
@@ -274,7 +284,7 @@ public class Tts {
                 myWriter.close();
 
                 command.remove(command.size()-1); // removes previous command
-                command.add("python3 bible-tts/chunks/offline.py");
+                command.add(formatCommand("python3 bible-tts/chunks/offline.py"));
                 ProcessBuilder processBuilder = new ProcessBuilder(command);
                 Process process = processBuilder.start();
                 process.waitFor();

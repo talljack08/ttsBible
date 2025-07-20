@@ -11,7 +11,7 @@ import java.util.List;
 public class Statistics
 {
     public static void getStats(String translation) throws IOException, CsvException {
-        File offlineBible = new File("bible-tts/" + translation.toLowerCase() + ".csv");
+        File offlineBible = new File("bible-tts/offline/" + translation.toLowerCase() + ".csv");
         if(!offlineBible.exists())
         {
             System.out.println("ERROR: Please download bible first.");
@@ -19,7 +19,7 @@ public class Statistics
         else
         {
             System.out.println("Stats for " + translation + ":");
-            CSVReader reader = new CSVReader(new FileReader("bible-tts/" + translation.toLowerCase() + ".csv"));
+            CSVReader reader = new CSVReader(new FileReader("bible-tts/offline/" + translation.toLowerCase() + ".csv"));
             List<String[]> records = reader.readAll();
 
             int totalOT = 0;

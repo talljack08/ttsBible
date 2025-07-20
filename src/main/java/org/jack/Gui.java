@@ -84,7 +84,7 @@ public class Gui extends JFrame {
                 ps_goal = -99999;
             }
 
-            File offlineBible = new File("bible-tts/" + translation.toLowerCase() + ".csv");
+            File offlineBible = new File("bible-tts/offline/" + translation.toLowerCase() + ".csv");
 
             Reader otReader;
             Reader ntReader;
@@ -144,13 +144,18 @@ public class Gui extends JFrame {
                     + "\n\n" + json + "\n\nGenerating Audio...");
 
             Tts file = new Tts(combinedTexts);
+            String confirmation = "Done!";
             try {
-                file.createFiles();
-            } catch (InvalidDataException | UnsupportedTagException | IOException ex) {
+                String error = file.createFiles();
+                if(!error.isEmpty())
+                {
+                    confirmation = error;
+                }
+            } catch (InvalidDataException | UnsupportedTagException | IOException | InterruptedException ex) {
                 throw new RuntimeException(ex);
             }
 
-            JOptionPane.showMessageDialog(null, "Done!");
+            JOptionPane.showMessageDialog(null, confirmation);
         });
 
         importButton.addActionListener(e -> i.createWindow());
@@ -162,6 +167,22 @@ public class Gui extends JFrame {
     {
         v.setOfflineMode();
         setTitle("BibleTTS (offline)");
+
+        for(int i = comboBox1.getItemCount()-1; i >= 0 ; i--)
+        {
+            File f = new File("bible-tts/offline/" + comboBox1.getItemAt(i).toLowerCase() + ".csv");
+            if(!f.exists())
+            {
+                comboBox1.removeItemAt(i);
+            }
+        }
+
+        if(comboBox1.getItemCount() == 0)
+        {
+            comboBox1.addItem("None found");
+            comboBox1.setEnabled(false);
+            generateButton.setEnabled(false);
+        }
     }
 
     public void _import(String j)
@@ -277,8 +298,8 @@ public class Gui extends JFrame {
         return GuiPanel;
     }
 
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
+    private void createUIComponents()
+    {
         oldTestamentVerses = new HintTextField("0");
         oldTestamentChapter = new HintTextField("Gen.1");
         newTestamentVerses = new HintTextField("0");

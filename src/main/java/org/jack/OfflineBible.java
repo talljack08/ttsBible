@@ -14,7 +14,7 @@ public class OfflineBible
     private static final Dictionary<String, String[]> bible = new Hashtable<>();
 
     public static void importBible(String translation) throws IOException, CsvException {
-        CSVReader reader = new CSVReader(new FileReader("bible-tts/" + translation.toLowerCase() + ".csv"));
+        CSVReader reader = new CSVReader(new FileReader("bible-tts/offline/" + translation.toLowerCase() + ".csv"));
         List<String[]> records = reader.readAll();
         for (String[] record : records) {
             bible.put(record[0], new String[]{record[1], record[2], record[3], record[4]});

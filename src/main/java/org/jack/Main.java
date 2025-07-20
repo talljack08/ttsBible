@@ -1,3 +1,5 @@
+// TODO: add a check to see of the tts model file is downloaded
+
 package org.jack;
 
 import com.opencsv.exceptions.CsvException;
@@ -16,7 +18,7 @@ public class Main
     public static String voice = "";
     public static int dayOffset = 0;
 
-    public static void main(String[] args) throws IOException, CsvException {
+    public static void main(String[] args) throws IOException, CsvException, InterruptedException {
         if(args.length > 1 && args[0].toLowerCase().contains("-download"))
         {
             new Downloader(getChangingBit(), args[1]);

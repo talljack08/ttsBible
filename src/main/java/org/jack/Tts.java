@@ -167,7 +167,7 @@ public class Tts {
             System.out.println("Done.");
             System.out.print("Downloading TTS model... ");
 
-            File model = new File("bible-tts/offline/en_US-lessac-medium.onnx"); // TODO: add file name, do testing, change dirs
+            File model = new File("bible-tts/offline/en_US-lessac-medium.onnx");
             if(!model.exists())
             {
                 command.remove(command.size()-1);

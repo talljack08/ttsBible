@@ -1,5 +1,3 @@
-// TODO: add a check to see of the tts model file is downloaded
-
 package org.jack;
 
 import com.opencsv.exceptions.CsvException;

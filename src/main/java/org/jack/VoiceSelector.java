@@ -65,13 +65,16 @@ public class VoiceSelector extends JFrame {
     }
 
     public void createWindow() {
-        setContentPane(voiceSelectorPanel);
-        if (!offlineMode) {
-            setTitle("BibleTTS");
+        try {
+            setLocationByPlatform(true);
+            setContentPane(voiceSelectorPanel);
+            if (!offlineMode) {
+                setTitle("BibleTTS");
+            }
+            setSize(400, 225);
+            setLocationRelativeTo(null);
+        } catch (IllegalComponentStateException ignored) {
         }
-        setSize(400, 225);
-        setLocationRelativeTo(null);
-        setLocationByPlatform(true);
         setVisible(true);
     }
 

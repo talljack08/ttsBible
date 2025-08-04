@@ -6,6 +6,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 public class Options extends JFrame {
     private JPanel spotPanel;
@@ -14,8 +15,11 @@ public class Options extends JFrame {
     private JButton importButton;
     private JCheckBox doAddDay;
     private JCheckBox includeTomorrowCheckBox;
+    private JButton downloadButton;
 
+    private final DownloaderGUI d = new DownloaderGUI(this);
     private boolean manuallySelectedCB1 = false;
+    private boolean downloaderRunning = false;
 
     public Options(Gui gui) {
         checkBox1.addActionListener(e -> {
@@ -54,16 +58,46 @@ public class Options extends JFrame {
                 }
             }
         });
+        downloadButton.addActionListener(e -> {
+            d.createWindow();
+            try {
+                if (!downloaderRunning) {
+                    d.getConsole().setText("");
+                    new Downloader(Main.getChangingBit(), gui.getTranslation(), d);
+                    downloaderRunning = true;
+                    downloadButton.setText("View downloader");
+                    setTitle("BibleTTS (downloading)");
+                }
+            } catch (IOException | InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
     }
 
     public void createWindow() {
-        setContentPane(spotPanel);
-        setTitle("BibleTTS");
-        //setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(400, 225);
-        setLocationRelativeTo(null);
-        setLocationByPlatform(true);
+        try {
+            setLocationByPlatform(true);
+            setContentPane(spotPanel);
+            if (!downloaderRunning) {
+                setTitle("BibleTTS");
+            }
+            setSize(400, 225);
+            setLocationRelativeTo(null);
+        } catch (IllegalComponentStateException ignored) {
+        }
         setVisible(true);
+    }
+
+
+
+    public void setOfflineMode() {
+        downloadButton.setEnabled(false);
+    }
+
+    public void setDownloaderComplete() {
+        downloaderRunning = false;
+        downloadButton.setText("Run downloader");
+        setTitle("BibleTTS");
     }
 
     {
@@ -109,14 +143,18 @@ public class Options extends JFrame {
         checkBox1.setText("");
         panel3.add(checkBox1, BorderLayout.CENTER);
         final JPanel panel4 = new JPanel();
-        panel4.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel4.setLayout(new BorderLayout(0, 0));
         panel3.add(panel4, BorderLayout.EAST);
         doAddDay = new JCheckBox();
         doAddDay.setText("Offset Date -1");
-        panel4.add(doAddDay, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel4.add(doAddDay, BorderLayout.NORTH);
         includeTomorrowCheckBox = new JCheckBox();
         includeTomorrowCheckBox.setText("Double Reading");
-        panel4.add(includeTomorrowCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel4.add(includeTomorrowCheckBox, BorderLayout.CENTER);
+        downloadButton = new JButton();
+        downloadButton.setText("Run downloader");
+        downloadButton.setToolTipText("Downloads the selected reading in the dropdown menu");
+        panel4.add(downloadButton, BorderLayout.SOUTH);
         importButton = new JButton();
         importButton.setText("Import");
         spotPanel.add(importButton, BorderLayout.EAST);

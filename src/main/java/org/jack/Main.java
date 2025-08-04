@@ -15,6 +15,7 @@ public class Main
     public static boolean doDouble = false;
     public static String voice = "";
     public static int dayOffset = 0;
+    public static String confirmation = "Done!";
 
     public static void main(String[] args) throws IOException, CsvException, InterruptedException {
         if(args.length > 1 && args[0].toLowerCase().contains("-download"))

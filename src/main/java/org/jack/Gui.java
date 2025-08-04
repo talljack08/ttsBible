@@ -2,8 +2,6 @@ package org.jack;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.mpatric.mp3agic.InvalidDataException;
-import com.mpatric.mp3agic.UnsupportedTagException;
 import com.opencsv.exceptions.CsvException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,6 +32,7 @@ public class Gui extends JFrame {
     private JButton voiceButton;
 
     private static final VoiceSelector v = new VoiceSelector();
+    private final Options i;
 
     private boolean doJSON = false;
 
@@ -51,14 +50,9 @@ public class Gui extends JFrame {
         setSize(400, 225);
         setLocationRelativeTo(null);
         setLocationByPlatform(true);
-//        comboBox1.addItem("NABRE");
-//        comboBox1.addItem("ESV");
-//        comboBox1.addItem("KJV");
-//        comboBox1.addItem("NIV");
-//        comboBox1.addItem("CEV");
         setVisible(true);
 
-        Options i = new Options(this);
+        i = new Options(this);
 
         generateButton.addActionListener(e -> {
             int multiplier = 1;
@@ -137,18 +131,11 @@ public class Gui extends JFrame {
                     + psReader.getReadingOffset() + " offset in the book of Psalms. Stop at: " + psReader.getNextChapter() + "."
                     + "\n\n" + json + "\n\nGenerating Audio...");
 
-            Tts file = new Tts(combinedTexts);
-            String confirmation = "Done!";
-            try {
-                String error = file.createFiles();
-                if (!error.isEmpty()) {
-                    confirmation = error;
-                }
-            } catch (InvalidDataException | UnsupportedTagException | IOException | InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
+            Tts file = new Tts(combinedTexts, this);
+            generateButton.setEnabled(false);
+            file.start();
 
-            JOptionPane.showMessageDialog(null, confirmation);
+            //alert();
         });
 
         importButton.addActionListener(e -> i.createWindow());
@@ -156,8 +143,15 @@ public class Gui extends JFrame {
         voiceButton.addActionListener(e -> v.createWindow());
     }
 
+    public void alert()
+    {
+        JOptionPane.showMessageDialog(null, Main.confirmation);
+        generateButton.setEnabled(Main.confirmation.equals("Done!"));
+    }
+
     public void setOfflineMode() {
         v.setOfflineMode();
+        i.setOfflineMode();
         setTitle("BibleTTS (offline)");
 
         for (int i = comboBox1.getItemCount() - 1; i >= 0; i--) {
@@ -191,6 +185,11 @@ public class Gui extends JFrame {
 
     public void setDoJSON(boolean b) {
         doJSON = b;
+    }
+
+    public String getTranslation()
+    {
+        return comboBox1.getItemAt(comboBox1.getSelectedIndex());
     }
 
     /**

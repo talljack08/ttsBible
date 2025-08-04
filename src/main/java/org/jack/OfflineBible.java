@@ -5,13 +5,12 @@ import com.opencsv.exceptions.CsvException;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Dictionary;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 
 public class OfflineBible
 {
-    private static final Dictionary<String, String[]> bible = new Hashtable<>();
+    private static final HashMap<String, String[]> bible = new HashMap<>();
 
     public static void importBible(String translation) throws IOException, CsvException {
         CSVReader reader = new CSVReader(new FileReader("bible-tts/offline/" + translation.toLowerCase() + ".csv"));

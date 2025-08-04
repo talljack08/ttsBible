@@ -8,18 +8,20 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class Tts {
-    private final ArrayList<String> chunks = new ArrayList<>();
-    public final ArrayList<String> command = new ArrayList<>();
+import static org.jack.OfflineTtsHelper.*;
 
-    public Tts(String text) {
+public class Tts extends Thread {
+    private final ArrayList<String> chunks = new ArrayList<>();
+    private final Gui gui;
+
+    public Tts(String text, Gui gui) {
+        this.gui = gui;
         text = text
                 .replace("“", "").replace("”", "")
                 .replace("’", "").replace("ark ", "arc ")
@@ -52,183 +54,58 @@ public class Tts {
         chunks.add(currentChunk.toString());
     }
 
-    public String checkForPiper() throws IOException, InterruptedException {
-        if(System.getProperty("os.name").toLowerCase().startsWith("windows"))
-        {
-            command.add("cmd.exe");
-            command.add("/c");
-        }
-        else
-        {
-            command.add("/bin/bash");
-            command.add("-c");
-        }
-
-        command.add(formatCommand("python3 -m piper -h"));
-        ProcessBuilder processBuilder = new ProcessBuilder(command);
-        processBuilder.directory(new File("."));
-        Process process = processBuilder.start();
-        process.waitFor();
-
-
-        File model = new File("bible-tts/offline/en_US-lessac-medium.onnx");
-        if(!model.exists())
-        {
-            return handleMissingMod(command);
-        }
-
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream())))
-        {
-            if(reader.readLine() != null)
-            {
-                command.remove(command.size()-1);
-                command.add(formatCommand("python3 -m lameenc"));
-                processBuilder = new ProcessBuilder(command);
-                processBuilder.directory(new File("."));
-                process = processBuilder.start();
-                process.waitFor();
-
-                try(BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
-                    String line;
-                    if ((line = errorReader.readLine()) != null) {
-                        if (!line.contains("mod")) {
-                            if(Main.voice.equals("offline"))
-                            {
-                                System.out.println("Piper-tts & pydub found!");
-                                return "";
-                            }
-                            else
-                            {
-                                System.out.println("Piper-tts & pydub already installed.");
-                                return "";
-                            }
-                        }
-                    }
-                }
-            }
+    public void run() {
+        // creates paths
+        try {
+            Files.createDirectories(Paths.get(System.getProperty("user.dir"), "bible-tts")); // if it doesn't exist already
+            Files.createDirectories(Paths.get(System.getProperty("user.dir"), "bible-tts", "chunks"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        // windows / bash errors (python not installed)
-        try(BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream())))
-        {
-            String line;
-            try {
-                if((line = errorReader.readLine()) != null) {
-                    if(line.contains("command"))
-                    {
-                        String out = "Error: Please install python3 and run with flags \"--download tts\"";
-                        if(Main.voice.equals("offline"))
-                        {
-                            System.err.println();
-                            return out;
-                        }
-                        else
-                        {
-                            return out + " to finish the download";
-                        }
-                    }
-                    else if(line.contains("module"))
-                    {
-                        return handleMissingMod(command);
-                    }
-                }
-            } catch (IOException ignored) {
-                return handleMissingMod(command);
-            }
-
-        }
-
-        return "";
-    }
-
-    public String handleMissingMod(ArrayList<String> command) throws InterruptedException, IOException {
-        if(!Main.voice.equals("offline"))
-        {
-            System.out.print("Downloading piper-tts... ");
-
-            command.remove(command.size()-1); // removes previous command
-            command.add(formatCommand("python3 -m pip install piper-tts --break-system-packages"));
-            ProcessBuilder processBuilder = new ProcessBuilder(command);
-            Process process = processBuilder.start();
-            process.waitFor();
-
-            System.out.println("Done.");
-            System.out.print("Downloading lameenc... ");
-
-            command.remove(command.size()-1);
-            command.add(formatCommand("python3 -m pip install lameenc --break-system-packages"));
-            processBuilder = new ProcessBuilder(command);
-            Path offlineFolder = Paths.get(System.getProperty("user.dir"), "bible-tts", "offline");
-            Files.createDirectories(offlineFolder);
-            processBuilder.directory(offlineFolder.toFile());
-            process = processBuilder.start();
-            process.waitFor();
-
-            System.out.println("Done.");
-            System.out.print("Downloading TTS model... ");
-
-            File model = Paths.get(System.getProperty("user.dir"), "bible-tts", "offline", "en_US-lessac-medium.onnx").toFile();
-            if(!model.exists())
-            {
-                command.remove(command.size()-1);
-                command.add(formatCommand("python3 -m piper.download_voices en_US-lessac-medium"));
-                processBuilder = new ProcessBuilder(command);
-                Files.createDirectories(offlineFolder);
-                processBuilder.directory(Paths.get(System.getProperty("user.dir"), "bible-tts", "offline").toFile());
-                process = processBuilder.start();
-                process.waitFor();
-
-                System.out.println("Done.");
-            }
-            else {
-                System.out.println("Skipped.");
-            }
-
-        } else {
-            return "Error: Python found with no piper-tts/lameenc/model, please run with flags " +
-                    "\"--download tts\" when internet is available";
-        }
-
-        return "";
-    }
-
-    private String formatCommand(String text)
-    {
-        if(System.getProperty("os.name").toLowerCase().startsWith("windows"))
-        {
-            text = text.replace("python3", "py");
-        }
-
-        return text;
-    }
-
-    public String createFiles() throws InvalidDataException, UnsupportedTagException, IOException, InterruptedException {
-        // creates paths
-        Files.createDirectories(Paths.get(System.getProperty("user.dir"), "bible-tts")); // if it doesn't exist already
-        Files.createDirectories(Paths.get(System.getProperty("user.dir"), "bible-tts", "chunks"));
-
         // makes sure piper is installed for offline usage
-        String error = "";
+        String error;
         if(Main.voice.equals("offline"))
         {
-            error = checkForPiper();
+            try {
+                error = checkForPiper(getCommandStart());
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             if(!error.isEmpty())
             {
-                return error;
+                Main.confirmation = error;
+                return;
             }
         }
 
         // creating individual files
         int chunkNum = 1;
+        String title = gui.getTitle();
+
+        // regex to see if the program has already made a file before
+        if(title.matches(".*\\(\\d.*"))
+        {
+            String temp = title;
+            int pIndex = 0;
+            while(temp.contains("("))
+            {
+                pIndex = temp.indexOf("(") + pIndex+1;
+                temp = title.substring(pIndex);
+            }
+
+            title = title.substring(0, pIndex-1);
+        }
+
         for (String chunk : chunks)
         {
             System.out.print("Creating chunk " + chunkNum + "/" + chunks.size() + "... ");
+            gui.setTitle(title + " (" + (chunkNum-1) + "/" + chunks.size() + ")");
             createFile(chunk, chunkNum);
             chunkNum++;
             System.out.println("Done");
         }
+        gui.setTitle(title + " (" + chunks.size() + "/" + chunks.size() + ")");
 
         // date
         LocalDateTime ldt = LocalDateTime.now();
@@ -240,11 +117,19 @@ public class Tts {
 
         // combine chunks
         System.out.print("Stitching... ");
-        Mp3Stitcher.stitchMp3Files(chunkNum, fileName);
+        try {
+            Mp3Stitcher.stitchMp3Files(chunkNum, fileName);
+        } catch (IOException | UnsupportedTagException | InvalidDataException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("Done");
-        FileUtils.deleteDirectory(Paths.get(System.getProperty("user.dir"), "bible-tts", "chunks").toFile());
+        try {
+            FileUtils.deleteDirectory(Paths.get(System.getProperty("user.dir"), "bible-tts", "chunks").toFile());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        return "";
+        gui.alert();
     }
 
     public void createFile(String text, int index)
@@ -258,7 +143,7 @@ public class Tts {
                         "import lameenc\n" +
                         "from piper import PiperVoice\n" +
                         "\n" +
-                        "voice = PiperVoice.load(\"bible-tts/offline/en_US-lessac-medium.onnx\")\n" +
+                        "voice = PiperVoice.load(\"bible-tts/offline/" + voiceModel + ".onnx\")\n" +
                         "with wave.open(\"bible-tts/chunks/out.wav\", \"wb\") as wav_file:\n" +
                         "    voice.synthesize_wav(\"" + text + "\", wav_file)\n" +
                         "\n" +
@@ -283,7 +168,7 @@ public class Tts {
                         "    f.write(mp3_data)");
                 myWriter.close();
 
-                command.remove(command.size()-1); // removes previous command
+                ArrayList<String> command = getCommandStart();
                 command.add(formatCommand("python3 bible-tts/chunks/offline.py"));
                 ProcessBuilder processBuilder = new ProcessBuilder(command);
                 Process process = processBuilder.start();

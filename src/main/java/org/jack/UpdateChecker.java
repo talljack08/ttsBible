@@ -42,7 +42,7 @@ public class UpdateChecker extends Thread
                         }
 
                         ComparableVersion latestVersion = new ComparableVersion(version.toString());
-                        ComparableVersion currentVersion = new ComparableVersion("2.1.0");
+                        ComparableVersion currentVersion = new ComparableVersion("2.1.1");
 
                         if(currentVersion.compareTo(latestVersion) < 0)
                         {

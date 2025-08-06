@@ -9,10 +9,12 @@ import org.apache.commons.io.FileUtils;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import static org.jack.OfflineTtsHelper.*;
 
@@ -36,17 +38,23 @@ public class Tts extends Thread {
         {
             String letter = text.substring(i, i+1);
 
-            if(relativeIndex < 7500 || !letter.equals("."))
-            {
-                currentChunk.append(letter);
-            }
-            else
+            /* if 6625 characters and . OR 7250 characters, no period, but a "," or semicolon, the chunk ends.
+            *  essentially, this ends the file around the 8-9 minute mark, giving the program 625 characters of room to
+            *  find a period to end the chunk naturally before it chooses a more abrupt-sounding end (there would be too
+            *  much of a risk of the file getting capped at the 10-minute mark).
+            */
+            if(relativeIndex >= 6625 && (letter.equals(".") || (relativeIndex >= 7250 && (letter.equals(";") ||
+                    letter.equals(",")))))
             {
                 currentChunk.append(".");
                 relativeIndex = 0;
                 chunks.add(currentChunk.toString());
                 currentChunk = new StringBuilder();
                 continue;
+            }
+            else
+            {
+                currentChunk.append(letter);
             }
 
             relativeIndex++;
@@ -75,6 +83,7 @@ public class Tts extends Thread {
             if(!error.isEmpty())
             {
                 Main.confirmation = error;
+                gui.alert();
                 return;
             }
         }
@@ -97,8 +106,36 @@ public class Tts extends Thread {
             title = title.substring(0, pIndex-1);
         }
 
+        // makes each chunk
+        ArrayList<Long> timestamps = new ArrayList<>();
         for (String chunk : chunks)
         {
+            // waits to avoid >10/min api limit
+            if(timestamps.size() == 9)
+            {
+                // waits for predicted api limit to be over
+                try {
+                    // 1 minute plus 2 seconds for good luck
+                    long waitTime = 62-Instant.now().getEpochSecond()+timestamps.get(0);
+                    if(waitTime > 0)
+                    {
+                        System.out.println("Waiting " + waitTime + " seconds to avoid api limitations.");
+                        TimeUnit.SECONDS.sleep(waitTime);
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+                // shifts arraylist to left to prepare for more data
+                for(int i = 0; i < timestamps.size()-1; i++)
+                {
+                    timestamps.set(i, timestamps.get(i+1));
+                }
+                timestamps.remove(timestamps.size()-1);
+            }
+            timestamps.add(Instant.now().getEpochSecond());
+
+            // creates chunk
             System.out.print("Creating chunk " + chunkNum + "/" + chunks.size() + "... ");
             gui.setTitle(title + " (" + (chunkNum-1) + "/" + chunks.size() + ")");
             createFile(chunk, chunkNum);

@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static org.jack.OfflineTtsHelper.*;
 
@@ -219,7 +220,7 @@ public class Tts extends Thread {
         else
         {
             Voice voice = TTSVoice.provides().stream().filter(v -> v.getShortName().equals(Main.voice))
-                    .toList().get(0);
+                    .collect(Collectors.toList()).get(0);
 
             new TTS(voice, text)
                     .findHeadHook()

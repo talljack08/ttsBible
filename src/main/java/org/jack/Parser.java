@@ -31,14 +31,22 @@ public class Parser
         if(!mode.equals("offline"))
         {
             String translationLowercase = translation.toLowerCase();
-            int tid = switch(translationLowercase)
-            {
-                case "niv" -> 111;
-                case "esv" -> 59;
-                case "kvj" -> 1;
-                case "cev" -> 392;
-                default -> 463;
-            };
+            int tid = 463;
+
+            switch (translationLowercase) {
+                case "niv":
+                    tid = 111;
+                    break;
+                case "esv":
+                    tid = 59;
+                    break;
+                case "kjv":
+                    tid = 1;
+                    break;
+                case "cev":
+                    tid = 392;
+                    break;
+            }
 
             String url = "https://www.bible.com/_next/data/" + changingBit + "/en/audio-bible/" + tid + "/";
             chapterJSON = makeRequest(url + chapter + "." + translation + ".json?versionId=" + tid + "&usfm=" + chapter + "." + translation);
@@ -131,10 +139,18 @@ public class Parser
         if(!mode.equals("download"))
         {
             switch (nextChapter) {
-                case "PRO.INTRO1" -> nextChapter = "PSA.1";
-                case "PSA.INTRO1" -> nextChapter = "PRO.1";
-                case "MAT.INTRO1" -> nextChapter = "GEN.1";
-                case "GEN.INTRO1" -> nextChapter = "MAT.1";
+                case "PRO.INTRO1":
+                    nextChapter = "PSA.1";
+                    break;
+                case "PSA.INTRO1":
+                    nextChapter = "PRO.1";
+                    break;
+                case "MAT.INTRO1":
+                    nextChapter = "GEN.1";
+                    break;
+                case "GEN.INTRO1":
+                    nextChapter = "MAT.1";
+                    break;
             }
         }
 

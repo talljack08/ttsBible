@@ -79,12 +79,16 @@ public class VoiceSelector extends JFrame {
     }
 
     public void setVoice(int i) {
-        switch (i) {
-            case 1 -> Main.voice = "en-CA-LiamNeural";
-            case 2 -> Main.voice = "en-US-ChristopherNeural";
-            case 3 -> Main.voice = "fr-FR-RemyMultilingualNeural";
-            case 4 -> Main.voice = "de-DE-FlorianMultilingualNeural";
-            case 5 -> Main.voice = "offline";
+        if (i == 1) {
+            Main.voice = "en-CA-LiamNeural";
+        } else if (i == 2) {
+            Main.voice = "en-US-ChristopherNeural";
+        } else if (i == 3) {
+            Main.voice = "fr-FR-RemyMultilingualNeural";
+        } else if (i == 4) {
+            Main.voice = "de-DE-FlorianMultilingualNeural";
+        } else if (i == 5) {
+            Main.voice = "offline";
         }
     }
 

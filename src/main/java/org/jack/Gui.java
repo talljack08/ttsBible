@@ -40,6 +40,9 @@ public class Gui extends JFrame {
         // Makes sure title is set before possibly being overwritten with "offline mode"
         setTitle("BibleTTS");
 
+        // Defines options before possibly being set to offline mode
+        i = new Options(this);
+
         // checks for updates
         UpdateChecker checker = new UpdateChecker(this);
         checker.start();
@@ -51,8 +54,6 @@ public class Gui extends JFrame {
         setLocationRelativeTo(null);
         setLocationByPlatform(true);
         setVisible(true);
-
-        i = new Options(this);
 
         generateButton.addActionListener(e -> {
             int multiplier = 1;
